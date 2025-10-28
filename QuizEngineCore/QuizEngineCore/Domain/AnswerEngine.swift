@@ -29,7 +29,9 @@ public final class AnswerEngine {
         case let .capital(of: name):
             let countries = try await loadCountries()
             return capitalAnswer(for: name, countries: countries)
-
+        case let .countriesStartingWith(prefix):
+            let countries = try await loadCountries()
+            return countriesStartingWithAnswer(for: prefix, countries: countries)
        default:
             return CountryAnswer(
                 text: "I'm not sure how to answer that yet, but I can help with country capitals, codes, flags, or names by prefix.",
@@ -92,5 +94,20 @@ public final class AnswerEngine {
         }
 
         return bestMatch?.country
+    }
+    
+    private func countriesStartingWithAnswer(for prefix: String, countries: [Country]) -> CountryAnswer {
+        let normalizedPrefix = normalize(prefix)
+        let matching = countries
+            .filter { normalize($0.name).hasPrefix(normalizedPrefix) }
+            .sorted { $0.name < $1.name }
+            .map(\.name)
+
+        guard !matching.isEmpty else {
+            return CountryAnswer(text: "I couldn't find countries that start with \(prefix.uppercased()).", imageURL: nil)
+        }
+
+        let list = matching.joined(separator: ", ")
+        return CountryAnswer(text: "Countries that start with \(prefix.uppercased()): \(list).", imageURL: nil)
     }
 }

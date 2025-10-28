@@ -21,6 +21,19 @@ final class AnswerEngineTests: XCTestCase {
         XCTAssertEqual(answer.text, "The capitals of South Africa are Pretoria, Bloemfontein and Cape Town.")
     }
     
+    func test_answerProvidesCountriesStartingWithPrefix() async throws {
+        let countries = [
+            makeCountry(name: "Chile", capitals: ["Santiago"], iso: "CL", flagEmoji: "🇨🇱"),
+            makeCountry(name: "China", capitals: ["Beijing"], iso: "CN", flagEmoji: "🇨🇳"),
+            makeCountry(name: "Brazil", capitals: ["Brasília"], iso: "BR", flagEmoji: "🇧🇷")
+        ]
+        let sut = makeSUT(countries: countries)
+
+        let answer = try await sut.answer(for: "Which countries start with ch")
+
+        XCTAssertEqual(answer.text, "Countries that start with CH: Chile, China.")
+    }
+    
     func test_answerHandlesUnknownCountryGracefully() async throws {
         let sut = makeSUT(countries: [])
 
