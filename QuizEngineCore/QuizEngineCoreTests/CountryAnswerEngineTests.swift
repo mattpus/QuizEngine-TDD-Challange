@@ -8,7 +8,7 @@ final class AnswerEngineTests: XCTestCase {
 
         let answer = try await sut.answer(for: "test")
 
-        XCTAssertEqual(answer.text, "capital test")
+        XCTAssertEqual(answer.text, "unknown")
         XCTAssertNil(answer.imageURL)
     }
 
