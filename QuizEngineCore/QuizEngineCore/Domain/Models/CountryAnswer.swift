@@ -11,7 +11,7 @@ public struct CountryAnswer: Equatable {
     public let text: String
     public let imageURL: URL?
 
-    public init(text: String, imageURL: URL?) {
+    public init(text: String, imageURL: URL? = nil) {
         self.text = text
         self.imageURL = imageURL
     }
