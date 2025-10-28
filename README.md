@@ -20,6 +20,9 @@ Build a multi-platform quiz engine that can answer country-related questions whi
 
 ## Architecture at a Glance
 
+<img width="1243" height="789" alt="Screenshot 2025-10-28 at 16 44 46" src="https://github.com/user-attachments/assets/733ca9e9-7fa5-4399-91f8-a5b0c947d8c8" />
+
+
 | Module | Responsibility | Key Types |
 | --- | --- | --- |
 | `CountryInfoCore` | Shared business logic. Interprets natural language questions, loads country metadata, and formats answers. | `CountryQuestionInterpreter`, `CountryAnswerEngine`, `RemoteCountryLoader`, `RemoteCountryRepository`, `URLSessionHTTPClient`, `Country` |
