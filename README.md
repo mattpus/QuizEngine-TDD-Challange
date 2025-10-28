@@ -1,28 +1,46 @@
-# QuizEngine-TDD-Challange
+# QuizEngine TDD Challenge
 
-Create a multi-platform app that can answer basic questions about a country.
+Build a multi-platform quiz engine that can answer country-related questions while practicing a disciplined TDD workflow.
 
-Instructions
-Follow the development processes and practices taught in the program (e.g., follow TDD, small commits, modular design, set up a CI/CD pipeline, etc.).
-Create two separate apps - a CLI app and an iOS app - reusing code as much as possible with a clean and modular design.
-The apps should have a chat-like UI, where the user asks a question, and the app replies.
-The apps should be able to reply to these four types of questions:
-What is the capital of [Country]?
-For example, What is the capital of Belgium?
-Which countries start with [Letters]?
-For example, Which countries start with CH?
-What is the ISO alpha-2 country code for [Country]?
-For example, What is the ISO alpha-2 country code for Greece?
-What is the flag of [Country]?
-For example, What is the flag of Brazil?
-The user should not need to type the question perfectly. The app should be able to respond to these type of questions in any way it can be phrased (or even misspelled!). Tip: Use an LLM or Natural Language interpreter to interpret/reply to the question.
-If needed, use https://restcountries.com as the data source (for country names, flags, etc.).
-Handle errors - if the network request fails, show an error with the option to retry.
-If you're unsure about a specific requirement, use your judgment and make a decision on your own (you should be able to justify the decision!).
-Guidelines
-Aim to commit your changes every time you add/alter the behavior of your system or refactor your code.
-Aim for descriptive commit messages that clarify the intent of your contribution, which will help other developers understand your train of thought and purpose of changes.
-The system should always be in a green state, meaning that in each commit all tests should be passing.
-The project should build without warnings.
-The code should be carefully organized and easy to read (e.g. indentation must be consistent).
-Aim to write self-documenting code by providing context and detail when naming your components, avoiding explanations in comments.
+## Project Goals
+
+- Deliver both a CLI app and an iOS app with maximum code reuse through clean modular design.
+- Provide a chat-style experience where users ask questions and receive answers.
+- Support fuzzy input so the app can respond even when questions are phrased differently or contain typos. Consider using an LLM or NLP component.
+- Use [restcountries.com](https://restcountries.com) when you need country data (names, capitals, flags, ISO codes, etc.).
+- Handle networking failures gracefully and offer an option to retry.
+- Make clear, justifiable decisions when requirements are ambiguous.
+
+## Required Question Types
+
+- **Capital lookup:** “What is the capital of Belgium?”
+- **Prefix search:** “Which countries start with CH?”
+- **ISO alpha-2 code:** “What is the ISO alpha-2 country code for Greece?”
+- **Flag lookup:** “What is the flag of Brazil?”
+
+## Architecture at a Glance
+
+| Module | Responsibility | Key Types |
+| --- | --- | --- |
+| `CountryInfoCore` | Shared business logic. Interprets natural language questions, loads country metadata, and formats answers. | `CountryQuestionInterpreter`, `CountryAnswerEngine`, `RemoteCountryLoader`, `RemoteCountryRepository`, `URLSessionHTTPClient`, `Country` |
+| `CountryInfoCLICore` | Reusable shell for terminal UX. Handles prompts, command parsing, and chat display with ANSI styling. | `CountryChatApp`, `ChatIO` |
+| `CountryInfoCLI` | Wires the CLI core to the remote data source so the executable can run end-to-end. | `CountryInfoCLIApp` (entry point) |
+| `CountryInfoUICore` | UI-agnostic state management for SwiftUI or UIKit layers. Manages chat transcript, loading state, and retry flow. | `CountryChatViewModel`, `CountryChatMessage` |
+
+### Core Components
+
+- **`CountryQuestionInterpreter`** — Converts fuzzy, free-form user input into structured `CountryQuery` intents using tokenisation and Levenshtein distance thresholds to cope with typos.
+- **`CountryAnswerEngine`** — Orchestrates the flow: interprets the question, lazily loads and caches country data via `CountryDataLoader`, and produces contextual `CountryAnswer` responses (including lists, ISO codes, flags, and friendly fallbacks).
+- **`RemoteCountryLoader`** — Fetches and decodes REST Countries API payloads into `Country` models, surfacing connectivity vs. data errors distinctly.
+- **`RemoteCountryRepository`** — Bridges the transport-agnostic core to the loader, satisfying the `CountryDataLoader` protocol.
+- **`URLSessionHTTPClient`** — Minimal `HTTPClient` implementation tailored for async/await GET requests with response validation.
+- **`CountryChatApp`** — Implements a conversational loop for the terminal with commands such as `exit` and `retry`, piping answers and errors through stylised output helpers.
+- **`CountryChatViewModel`** — Maintains an observable chat transcript, loading state, and error messaging for UI clients, leveraging the same `CountryAnswering` protocol for consistency across platforms.
+
+## Development Guidelines
+
+- Follow the program’s engineering practices (TDD, small commits, modular design, CI/CD, etc.).
+- Keep the build free of warnings and ensure the system stays green (all tests passing) on every commit.
+- Make frequent, descriptive commits that explain the intent of each change.
+- Maintain clean, readable code: consistent formatting, expressive names, minimal reliance on comments.
+- Organize modules thoughtfully so the architecture is easy to navigate.
