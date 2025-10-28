@@ -1,0 +1,35 @@
+{
+  "configurations" : [
+    {
+      "id" : "429B35A9-3B60-4B43-BDAC-C2D279D52CE4",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:QuizEngineCore.xcodeproj",
+          "identifier" : "C9413C822EB13251002F03B9",
+          "name" : "QuizEngineiOS"
+        }
+      ]
+    },
+    "performanceAntipatternCheckerEnabled" : true,
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:QuizEngineCore.xcodeproj",
+        "identifier" : "C9413C8A2EB13251002F03B9",
+        "name" : "QuizEngineiOSTests"
+      }
+    }
+  ],
+  "version" : 1
+}

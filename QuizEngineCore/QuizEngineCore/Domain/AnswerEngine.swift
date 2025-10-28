@@ -7,7 +7,7 @@
 
 import Foundation
 
-public final class AnswerEngine {
+public final class AnswerEngine: AnswerProvider {
     public enum Error: Swift.Error, Equatable {
         case dataUnavailable
     }

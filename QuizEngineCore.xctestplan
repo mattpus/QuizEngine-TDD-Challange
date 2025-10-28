@@ -1,0 +1,28 @@
+{
+  "configurations" : [
+    {
+      "id" : "2191C2D1-8207-4ED1-B2D5-777A33CE4F14",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:QuizEngineCore.xcodeproj",
+          "identifier" : "C9413BEA2EB10393002F03B9",
+          "name" : "QuizEngineCoreTests"
+        }
+      ]
+    },
+    "performanceAntipatternCheckerEnabled" : true,
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+
+  ],
+  "version" : 1
+}
