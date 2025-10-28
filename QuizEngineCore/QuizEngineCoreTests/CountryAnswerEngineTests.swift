@@ -43,6 +43,16 @@ final class AnswerEngineTests: XCTestCase {
         XCTAssertEqual(answer.text, "The ISO alpha-2 code for Greece is GR.")
     }
     
+    func test_answerProvidesFlagInformation() async throws {
+        let countries = [makeCountry(name: "Brazil", capitals: ["Brasília"], iso: "BR", flagEmoji: "🇧🇷", flagURL: URL(string: "https://flags.com/br.png"))]
+        let sut = makeSUT(countries: countries)
+
+        let answer = try await sut.answer(for: "Show flag of Brazil")
+
+        XCTAssertEqual(answer.text, "The flag of Brazil is 🇧🇷.")
+        XCTAssertEqual(answer.imageURL, URL(string: "https://flags.com/br.png"))
+    }
+    
     func test_answerHandlesUnknownCountryGracefully() async throws {
         let sut = makeSUT(countries: [])
 

@@ -35,7 +35,10 @@ public final class AnswerEngine {
         case let .isoCode(of: name):
             let countries = try await loadCountries()
             return isoAnswer(for: name, countries: countries)
-       default:
+        case let .flag(of: name):
+            let countries = try await loadCountries()
+            return flagAnswer(for: name, countries: countries)
+        case .unknown:
             return CountryAnswer(
                 text: "I'm not sure how to answer that yet, but I can help with country capitals, codes, flags, or names by prefix.",
                 imageURL: nil
@@ -56,6 +59,8 @@ public final class AnswerEngine {
             throw Error.dataUnavailable
         }
     }
+    
+    // MARK: - Methods to create an anwers based on queries
     
     private func isoAnswer(for rawName: String, countries: [Country]) -> CountryAnswer {
         guard let match = findCountry(matching: rawName, in: countries) else {
@@ -81,6 +86,22 @@ public final class AnswerEngine {
         } else {
             return CountryAnswer(text: "The capitals of \(match.name) are \(formattedCapitals).", imageURL: nil)
         }
+    }
+    
+    private func flagAnswer(for rawName: String, countries: [Country]) -> CountryAnswer {
+        guard let match = findCountry(matching: rawName, in: countries) else {
+            return CountryAnswer(text: "I couldn't find information about \(rawName).", imageURL: nil)
+        }
+
+        if let emoji = match.flagEmoji, !emoji.isEmpty {
+            return CountryAnswer(text: "The flag of \(match.name) is \(emoji).", imageURL: match.flagImageURL)
+        }
+
+        if let url = match.flagImageURL {
+            return CountryAnswer(text: "Here's the flag of \(match.name): \(url.absoluteString)", imageURL: url)
+        }
+
+        return CountryAnswer(text: "I couldn't find the flag for \(match.name).", imageURL: nil)
     }
 
     private func findCountry(matching rawName: String, in countries: [Country]) -> Country? {
