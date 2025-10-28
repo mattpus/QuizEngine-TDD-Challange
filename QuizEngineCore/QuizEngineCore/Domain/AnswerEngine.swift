@@ -32,6 +32,9 @@ public final class AnswerEngine {
         case let .countriesStartingWith(prefix):
             let countries = try await loadCountries()
             return countriesStartingWithAnswer(for: prefix, countries: countries)
+        case let .isoCode(of: name):
+            let countries = try await loadCountries()
+            return isoAnswer(for: name, countries: countries)
        default:
             return CountryAnswer(
                 text: "I'm not sure how to answer that yet, but I can help with country capitals, codes, flags, or names by prefix.",
@@ -54,6 +57,14 @@ public final class AnswerEngine {
         }
     }
     
+    private func isoAnswer(for rawName: String, countries: [Country]) -> CountryAnswer {
+        guard let match = findCountry(matching: rawName, in: countries) else {
+            return CountryAnswer(text: "I couldn't find information about \(rawName).", imageURL: nil)
+        }
+
+        return CountryAnswer(text: "The ISO alpha-2 code for \(match.name) is \(match.isoCode.uppercased()).", imageURL: nil)
+    }
+
     private func capitalAnswer(for rawName: String, countries: [Country]) -> CountryAnswer {
         guard let match = findCountry(matching: rawName, in: countries) else {
             return CountryAnswer(text: "I couldn't find information about \(rawName).", imageURL: nil)

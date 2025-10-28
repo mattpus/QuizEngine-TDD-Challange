@@ -34,6 +34,15 @@ final class AnswerEngineTests: XCTestCase {
         XCTAssertEqual(answer.text, "Countries that start with CH: Chile, China.")
     }
     
+    func test_answerProvidesISOAlpha2Code() async throws {
+        let countries = [makeCountry(name: "Greece", capitals: ["Athens"], iso: "GR", flagEmoji: "🇬🇷")]
+        let sut = makeSUT(countries: countries)
+
+        let answer = try await sut.answer(for: "ISO alpha-2 code for Greece")
+
+        XCTAssertEqual(answer.text, "The ISO alpha-2 code for Greece is GR.")
+    }
+    
     func test_answerHandlesUnknownCountryGracefully() async throws {
         let sut = makeSUT(countries: [])
 
