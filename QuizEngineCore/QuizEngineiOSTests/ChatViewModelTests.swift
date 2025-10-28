@@ -10,11 +10,26 @@ import QuizEngineCore
 @testable import QuizEngineiOS
 
 final class ChatViewModelTests: XCTestCase {
-    
-    func test_ChatViewModel_Initialization() {
+    func test_chatViewModel_initialization() {
         let engine = AnswerEngineSpy(result: .success(CountryAnswer(text: "The capital of Belgium is Brussels.", imageURL: nil)))
         let sut = makeSUT(engine: engine)
-       XCTAssertNotNil(sut)
+        XCTAssertNotNil(sut)
+    }
+    
+    func test_chatViewModel_send_appendsUserAndAssistantMessagesOnSuccess() async {
+        let engine = AnswerEngineSpy(result: .success(CountryAnswer(text: "The capital of Belgium is Brussels.", imageURL: nil)))
+        let sut = makeSUT(engine: engine)
+        
+        await sut.send(question: "What is the capital of Belgium?")
+        
+        XCTAssertEqual(sut.messages.count, 2)
+        XCTAssertEqual(sut.messages[0].role, .user)
+        XCTAssertEqual(sut.messages[0].text, "What is the capital of Belgium?")
+        XCTAssertEqual(sut.messages[1].role, .assistant)
+        XCTAssertEqual(sut.messages[1].text, "The capital of Belgium is Brussels.")
+        XCTAssertFalse(sut.isLoading)
+        XCTAssertNil(sut.error)
+        XCTAssertTrue(sut.canRetry)
     }
     
     private func makeSUT(engine: AnswerEngineSpy, file: StaticString = #file, line: UInt = #line) -> ChatViewModel {
@@ -27,13 +42,11 @@ final class ChatViewModelTests: XCTestCase {
 
 private final class AnswerEngineSpy: AnswerProvider {
     private var results: [Result<CountryAnswer, AnswerEngine.Error>]
-   
-
+    
     init(result: Result<CountryAnswer, AnswerEngine.Error>) {
         self.results = [result]
     }
-
-
+    
     func answer(for question: String) async throws -> CountryAnswer {
         return try results.first!.get()
     }
