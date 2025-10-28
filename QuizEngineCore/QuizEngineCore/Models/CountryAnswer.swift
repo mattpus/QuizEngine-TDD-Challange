@@ -1,0 +1,18 @@
+//
+//  CountryAnswer.swift
+//  QuizEngineCore
+//
+//  Created by Matt on 28/10/2025.
+//
+
+import Foundation
+
+public struct CountryAnswer: Equatable {
+    public let text: String
+    public let imageURL: URL?
+
+    public init(text: String, imageURL: URL?) {
+        self.text = text
+        self.imageURL = imageURL
+    }
+}
