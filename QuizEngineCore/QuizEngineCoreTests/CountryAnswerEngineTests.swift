@@ -12,7 +12,29 @@ final class AnswerEngineTests: XCTestCase {
         XCTAssertNil(answer.imageURL)
     }
 
-    
+
+    func test_answerCachesCountriesAfterFirstLoad() async throws {
+        let countries = [makeCountry(name: "Belgium", capitals: ["Brussels"], iso: "BE", flagEmoji: "🇧🇪")]
+        let loader = CountryLoaderSpy(result: .success(countries))
+        let sut = AnswerEngine(loader: loader)
+
+        _ = try await sut.answer(for: "Capital of Belgium")
+        _ = try await sut.answer(for: "ISO code for Belgium")
+
+        XCTAssertEqual(loader.loadCallCount, 1)
+    }
+
+    func test_answerPropagatesLoaderErrors() async {
+        let loader = CountryLoaderSpy(result: .failure(anyNSError()))
+        let sut = AnswerEngine(loader: loader)
+
+        do {
+            _ = try await sut.answer(for: "Capital of Belgium")
+            XCTFail("Expected to throw")
+        } catch {
+            XCTAssertEqual(error as? AnswerEngine.Error, .dataUnavailable)
+        }
+    }
 
     // MARK: - Helpers
 

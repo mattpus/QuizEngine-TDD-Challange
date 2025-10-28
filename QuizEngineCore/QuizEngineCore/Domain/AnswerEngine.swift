@@ -24,6 +24,7 @@ public final class AnswerEngine {
     
     public func answer(for question: String) async throws -> CountryAnswer {
         let query = interpreter.interpret(question)
+        let countries = try await loadCountries()
         switch query {
         case let .capital(of: name):
             return CountryAnswer(text: "capital \(name)")
@@ -39,6 +40,20 @@ public final class AnswerEngine {
         case .unknown:
             return CountryAnswer(
                 text: "unknown")
+        }
+    }
+    
+    private func loadCountries() async throws -> [Country] {
+        if let cachedCountries {
+            return cachedCountries
+        }
+
+        do {
+            let countries = try await loader.loadCountries()
+            cachedCountries = countries
+            return countries
+        } catch {
+            throw Error.dataUnavailable
         }
     }
 }
