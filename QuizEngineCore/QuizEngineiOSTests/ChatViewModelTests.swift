@@ -10,12 +10,6 @@ import QuizEngineCore
 @testable import QuizEngineiOS
 
 final class ChatViewModelTests: XCTestCase {
-    func test_chatViewModel_initialization() {
-        let engine = AnswerEngineSpy(result: .success(CountryAnswer(text: "The capital of Belgium is Brussels.", imageURL: nil)))
-        let sut = makeSUT(engine: engine)
-        XCTAssertNotNil(sut)
-    }
-    
     func test_chatViewModel_send_appendsUserAndAssistantMessagesOnSuccess() async {
         let engine = AnswerEngineSpy(result: .success(CountryAnswer(text: "The capital of Belgium is Brussels.", imageURL: nil)))
         let sut = makeSUT(engine: engine)
@@ -32,7 +26,7 @@ final class ChatViewModelTests: XCTestCase {
         XCTAssertTrue(sut.canRetry)
     }
     
-    func test_sendStoresErrorWhenEngineFails() async {
+    func test_chatViewModel_send_storesErrorWhenEngineFails() async {
         let engine = AnswerEngineSpy(result: .failure(.dataUnavailable))
         let sut = makeSUT(engine: engine)
 
@@ -46,7 +40,7 @@ final class ChatViewModelTests: XCTestCase {
         XCTAssertTrue(sut.canRetry)
     }
     
-    func test_retryUsesLastQuestionAfterFailure() async {
+    func test_chatViewModel_retry_usesLastQuestionAfterFailure() async {
         let results: [Result<CountryAnswer, AnswerEngine.Error>] = [
             .failure(.dataUnavailable),
             .success(CountryAnswer(
@@ -59,10 +53,23 @@ final class ChatViewModelTests: XCTestCase {
         await sut.send(question: "Capital of Belgium")
         await sut.retry()
 
-        XCTAssertEqual(engine.receivedQuestions, ["Capital of Belgium", "Capital of Belgium"])
+        let received = await engine.getReceivedQuestions()
+        XCTAssertEqual(received, ["Capital of Belgium", "Capital of Belgium"])
         XCTAssertEqual(sut.messages.count, 2)
         XCTAssertEqual(sut.messages.last?.text, "The capital of Belgium is Brussels.")
         XCTAssertNil(sut.error)
+    }
+    
+    func test_chatViewModel_retry_doesNothingWhenNoPreviousQuestion() async {
+        let engine = AnswerEngineSpy(result: .success(CountryAnswer(text: "irrelevant", imageURL: nil)))
+        let sut = makeSUT(engine: engine)
+
+        await sut.retry()
+
+        XCTAssertTrue(sut.messages.isEmpty)
+        let received = await engine.getReceivedQuestions()
+        XCTAssertTrue(received.isEmpty)
+        XCTAssertFalse(sut.canRetry)
     }
     
     private func makeSUT(engine: AnswerEngineSpy, file: StaticString = #file, line: UInt = #line) -> ChatViewModel {
@@ -73,7 +80,7 @@ final class ChatViewModelTests: XCTestCase {
     }
 }
 
-private final class AnswerEngineSpy: AnswerProvider {
+private final actor AnswerEngineSpy: AnswerProvider {
     private var results: [Result<CountryAnswer, AnswerEngine.Error>]
     private(set) var receivedQuestions: [String] = []
     init(result: Result<CountryAnswer, AnswerEngine.Error>) {
@@ -96,5 +103,10 @@ private final class AnswerEngineSpy: AnswerProvider {
             return answer
         case let .failure(error):
             throw error
-        }    }
+        }
+    }
+    
+    func getReceivedQuestions() -> [String] {
+        return receivedQuestions
+    }
 }

@@ -64,8 +64,8 @@ final class URLProtocolStub: URLProtocol {
         let error: Error?
     }
 
-    private static var stub: Stub?
-    private static var requestObserver: ((URLRequest) -> Void)?
+    nonisolated(unsafe) private static var stub: Stub?
+    nonisolated(unsafe) private static var requestObserver: ((URLRequest) -> Void)?
 
     static func startInterceptingRequests() {
         URLProtocol.registerClass(URLProtocolStub.self)

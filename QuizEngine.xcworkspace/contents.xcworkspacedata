@@ -5,9 +5,9 @@
       location = "container:QuizEngineCore/QuizEngineCore.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:QuizEngineCore.xctestplan">
+      location = "group:QuizEngineiOS.xctestplan">
    </FileRef>
    <FileRef
-      location = "group:QuizEngineiOS.xctestplan">
+      location = "group:../QuizEngineCoreTests.xctestplan">
    </FileRef>
 </Workspace>
