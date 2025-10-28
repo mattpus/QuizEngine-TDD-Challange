@@ -6,13 +6,37 @@ final class AnswerEngineTests: XCTestCase {
         let countries = [makeCountry(name: "Belgium", capitals: ["Brussels"], iso: "BE", flagEmoji: "🇧🇪")]
         let sut = makeSUT(countries: countries)
 
-        let answer = try await sut.answer(for: "test")
+        let answer = try await sut.answer(for: "What's the capital of Belgium?")
 
-        XCTAssertEqual(answer.text, "unknown")
+        XCTAssertEqual(answer.text, "The capital of Belgium is Brussels.")
         XCTAssertNil(answer.imageURL)
     }
+    
+    func test_answerProvidesAllCapitalsIfMultiple() async throws {
+        let countries = [makeCountry(name: "South Africa", capitals: ["Pretoria", "Bloemfontein", "Cape Town"], iso: "ZA", flagEmoji: "🇿🇦")]
+        let sut = makeSUT(countries: countries)
 
+        let answer = try await sut.answer(for: "Capital of south africa")
 
+        XCTAssertEqual(answer.text, "The capitals of South Africa are Pretoria, Bloemfontein and Cape Town.")
+    }
+    
+    func test_answerHandlesUnknownCountryGracefully() async throws {
+        let sut = makeSUT(countries: [])
+
+        let answer = try await sut.answer(for: "Capital of Wakanda")
+
+        XCTAssertEqual(answer.text, "I couldn't find information about Wakanda.")
+    }
+    
+    func test_answerHandlesUnknownQuestionGracefully() async throws {
+        let sut = makeSUT(countries: [])
+
+        let answer = try await sut.answer(for: "How tall is Mount Everest?")
+
+        XCTAssertEqual(answer.text, "I'm not sure how to answer that yet, but I can help with country capitals, codes, flags, or names by prefix.")
+    }
+    
     func test_answerCachesCountriesAfterFirstLoad() async throws {
         let countries = [makeCountry(name: "Belgium", capitals: ["Brussels"], iso: "BE", flagEmoji: "🇧🇪")]
         let loader = CountryLoaderSpy(result: .success(countries))

@@ -24,22 +24,17 @@ public final class AnswerEngine {
     
     public func answer(for question: String) async throws -> CountryAnswer {
         let query = interpreter.interpret(question)
-        let countries = try await loadCountries()
+
         switch query {
         case let .capital(of: name):
-            return CountryAnswer(text: "capital \(name)")
+            let countries = try await loadCountries()
+            return capitalAnswer(for: name, countries: countries)
 
-        case let .isoCode(of: name):
-            return CountryAnswer(text: "isoCode \(name)")
-
-        case let .flag(of: name):
-            return CountryAnswer(text: "flag \(name)")
-
-        case let .countriesStartingWith(prefix):
-            return CountryAnswer(text: "countriesStartingWith \(prefix)")
-        case .unknown:
+       default:
             return CountryAnswer(
-                text: "unknown")
+                text: "I'm not sure how to answer that yet, but I can help with country capitals, codes, flags, or names by prefix.",
+                imageURL: nil
+            )
         }
     }
     
@@ -55,5 +50,47 @@ public final class AnswerEngine {
         } catch {
             throw Error.dataUnavailable
         }
+    }
+    
+    private func capitalAnswer(for rawName: String, countries: [Country]) -> CountryAnswer {
+        guard let match = findCountry(matching: rawName, in: countries) else {
+            return CountryAnswer(text: "I couldn't find information about \(rawName).", imageURL: nil)
+        }
+
+        let capitals = match.capitalCities
+        guard !capitals.isEmpty else {
+            return CountryAnswer(text: "I couldn't find capital information for \(match.name).", imageURL: nil)
+        }
+
+        let formattedCapitals = formatList(capitals)
+        if capitals.count == 1 {
+            return CountryAnswer(text: "The capital of \(match.name) is \(formattedCapitals).", imageURL: nil)
+        } else {
+            return CountryAnswer(text: "The capitals of \(match.name) are \(formattedCapitals).", imageURL: nil)
+        }
+    }
+
+    private func findCountry(matching rawName: String, in countries: [Country]) -> Country? {
+        let normalizedInput = normalize(rawName)
+        var bestMatch: (country: Country, distance: Int)?
+
+        for country in countries {
+            let normalizedCandidate = normalize(country.name)
+
+            if normalizedCandidate == normalizedInput || normalizedCandidate.contains(normalizedInput) || normalizedInput.contains(normalizedCandidate) {
+                return country
+            }
+
+            let distance = levenshtein(normalizedCandidate, normalizedInput)
+            let threshold = max(1, Int(Double(max(normalizedCandidate.count, normalizedInput.count)) * 0.3))
+
+            if distance <= threshold {
+                if bestMatch == nil || distance < bestMatch!.distance {
+                    bestMatch = (country, distance)
+                }
+            }
+        }
+
+        return bestMatch?.country
     }
 }
