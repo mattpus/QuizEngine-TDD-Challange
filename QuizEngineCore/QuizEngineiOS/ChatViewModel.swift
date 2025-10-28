@@ -34,6 +34,11 @@ final class ChatViewModel: ObservableObject {
         await answer(question, appendUserMessage: false)
     }
     
+    public func retry() async {
+        guard let lastQuestion else { return }
+        await answer(lastQuestion, appendUserMessage: false)
+    }
+    
     private func answer(_ question: String, appendUserMessage: Bool) async {
         if appendUserMessage {
             messages.append(ChatMessage(role: .user, text: question))
