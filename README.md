@@ -1,57 +1,134 @@
 # QuizEngine TDD Challenge
 
-Build a multi-platform quiz engine that can answer country-related questions while practicing a disciplined TDD workflow.
+Create a multi-platform app that can answer basic questions about a country.
 
-## Project Goals
+## Instructions
+- Follow the development processes and practices taught in the program (e.g., follow TDD, small commits, modular design, set up a CI/CD pipeline, etc.).
+- Create two separate apps - a CLI app and an iOS app - reusing code as much as possible with a clean and modular design.
+- The apps should have a chat-like UI, where the user asks a question, and the app replies.
+- The apps should be able to reply to these four types of questions:
+  - What is the capital of [Country]?
+  - For example, What is the capital of Belgium?
+  - Which countries start with [Letters]?
+  - For example, Which countries start with CH?
+  - What is the ISO alpha-2 country code for [Country]?
+  - For example, What is the ISO alpha-2 country code for Greece?
+  - What is the flag of [Country]?
+  - For example, What is the flag of Brazil?
+- The user should not need to type the question perfectly. The app should be able to respond to these type of questions in any way it can be phrased (or even misspelled!). Tip: Use an LLM or Natural Language interpreter to interpret/reply to the question.
+- If needed, use https://restcountries.com as the data source (for country names, flags, etc.).
+- Handle errors - if the network request fails, show an error with the option to retry.
+- If you're unsure about a specific requirement, use your judgment and make a decision on your own (you should be able to justify the decision!).
 
-- Deliver both a CLI app and an iOS app with maximum code reuse through clean modular design.
-- Provide a chat-style experience where users ask questions and receive answers.
-- Support fuzzy input so the app can respond even when questions are phrased differently or contain typos. Consider using an LLM or NLP component.
-- Use [restcountries.com](https://restcountries.com) when you need country data (names, capitals, flags, ISO codes, etc.).
-- Handle networking failures gracefully and offer an option to retry.
-- Make clear, justifiable decisions when requirements are ambiguous.
+## Guidelines
+- Aim to commit your changes every time you add/alter the behavior of your system or refactor your code.
+- Aim for descriptive commit messages that clarify the intent of your contribution, which will help other developers understand your train of thought and purpose of changes.
+- The system should always be in a green state, meaning that in each commit all tests should be passing.
+- The project should build without warnings.
+- The code should be carefully organized and easy to read (e.g. indentation must be consistent).
+- Aim to write self-documenting code by providing context and detail when naming your components, avoiding explanations in comments.
 
-## Required Question Types
+---
 
-- **Capital lookup:** “What is the capital of Belgium?”
-- **Prefix search:** “Which countries start with CH?”
-- **ISO alpha-2 code:** “What is the ISO alpha-2 country code for Greece?”
-- **Flag lookup:** “What is the flag of Brazil?”
+## Solution 
 
-## Repository Layout
+QuizEngine is a multi-target workspace built through TDD to answer country-related questions from multiple front-ends (iOS chat UI and terminal CLI) while sharing a single core domain. It consumes [restcountries.com](https://restcountries.com) data, supports resilient networking, and keeps presentation layers decoupled via protocols.
 
-- `QuizEngineCore/QuizEngineCore/Domain` — Natural-language interpretation, answer orchestration, and shared models.
-- `QuizEngineCore/QuizEngineCore/API` — Remote data integration, HTTP abstractions, and DTO-to-model mapping.
-- `QuizEngineCore/QuizEngineiOS` — iOS-facing view model and UI-friendly chat models backed by the core protocols.
-- `QuizEngineCore/QuizEngineCoreTests` — Unit tests covering the domain and API layers.
-- `QuizEngineCore/QuizEngineiOSTests` — Tests for the chat view model’s async flows, loading, and retry behaviour.
+---
 
-## Architecture at a Glance
+## Workspace Structure
 
-<img width="1243" height="789" alt="Screenshot 2025-10-28 at 16 44 46" src="https://github.com/user-attachments/assets/733ca9e9-7fa5-4399-91f8-a5b0c947d8c8" />
+The top-level `QuizEngine.xcworkspace` stitches together three Xcode projects so everything can be built and tested from one place:
 
-
-| Module | Responsibility | Key Types |
+| Project | Products | Notes |
 | --- | --- | --- |
-| `QuizEngineCore/Domain` | Interprets natural-language questions, coordinates answer generation, and formats responses returned to clients. | `AnswerEngine`, `AnswerProvider`, `CountryQuestionInterpreter`, `CountryQuery`, `CountryAnswer`, `Country` |
-| `QuizEngineCore/API` | Integrates with REST Countries while abstracting networking and decoding concerns. | `RemoteCountryLoader`, `CountryLoader`, `HTTPClient`, `URLSessionHTTPClient` |
-| `QuizEngineiOS` | Provides an iOS-friendly view model layer that depends only on the core protocol surface. | `ChatViewModel`, `ChatMessage`, `ErrorMessage` |
-| `QuizEngineCoreTests` | Drives the domain/API design through TDD and verifies boundary conditions. | `AnswerEngineTests`, `CountryQuestionInterpreterTests`, `RemoteCountryLoaderTests`, `URLSessionHTTPClientTests` |
-| `QuizEngineiOSTests` | Confirms chat state transitions, retries, and rendering-friendly formatting. | `ChatViewModelTests` |
+| `QuizEngineCore/QuizEngineCore.xcodeproj` | `QuizEngineCore.framework`, `QuizEngineiOS.framework`, `QuizEngineCLI.framework`, plus unit-test bundles for each module | Holds the domain, API integration, shared models, and cross-platform presentation logic. |
+| `QuiziOSApp/QuiziOSApp.xcodeproj` | `QuiziOSApp.app`, `QuiziOSAppUITests.xctest` | SwiftUI chat client for iOS. UITests attach via launch arguments and environment to deterministic stubs. |
+| `QuizCLIApp/QuizCLIApp.xcodeproj` | `QuizCLIApp` (command-line tool) | macOS CLI shell that shares `AnswerEngine` through `QuizEngineCLI`. |
 
-### Core Components
+### Target Map
 
-- **`AnswerProvider`** — Protocol describing the async answering contract; UI layers and tests depend on it to stay decoupled from concrete engines.
-- **`AnswerEngine`** — Implements `AnswerProvider`, interpreting questions, caching remote country data, and producing contextual `CountryAnswer` responses.
-- **`CountryQuestionInterpreter`** — Converts fuzzy, free-form user input into structured `CountryQuery` intents using tokenisation and Levenshtein distance thresholds to cope with typos.
-- **`CountryLoader` / `RemoteCountryLoader`** — Protocol and remote implementation that fetch and decode REST Countries API payloads into `Country` models, surfacing connectivity vs. data errors distinctly.
-- **`URLSessionHTTPClient`** — Minimal `HTTPClient` implementation tailored for async/await GET requests with response validation.
-- **`ChatViewModel`** — Maintains an observable chat transcript, loading state, and retry affordances for iOS clients by delegating to any `AnswerProvider`.
+- **Frameworks**: `QuizEngineCore`, `QuizEngineiOS`, `QuizEngineCLI`.
+- **Apps**: `QuiziOSApp` (iOS), `QuizCLIApp` (macOS CLI executable).
+- **Tests**:
+  - `QuizEngineCoreTests`
+  - `QuizEngineiOSTests`
+  - `QuizEngineCLITests`
+  - `QuiziOSAppTests`
+  - `QuiziOSAppUITests`
 
-## Development Guidelines
+The shared `CI.xctestplan` (and derived “AllUnitTests” scheme) can execute every test bundle in one click;
 
-- Follow the program’s engineering practices (TDD, small commits, modular design).
-- Keep the build free of warnings and ensure the system stays green (all tests passing) on every commit.
-- Make frequent, descriptive commits that explain the intent of each change.
-- Maintain clean, readable code: consistent formatting, expressive names, minimal reliance on comments.
-- Organize modules thoughtfully so the architecture is easy to navigate.
+---
+
+## Module Responsibilities
+
+| Module | Path | Responsibility | Representative Types |
+| --- | --- | --- | --- |
+| **Domain** | `QuizEngineCore/QuizEngineCore/Domain` | Parse natural-language questions, cache countries, produce `CountryAnswer` responses. | `AnswerEngine`, `CountryQuestionInterpreter`, `CountryQuery`, `CountryAnswer`, `Country` |
+| **API** | `QuizEngineCore/QuizEngineCore/API` | Fetch and decode REST Countries data; abstract URL loading. | `RemoteCountryLoader`, `CountryLoader`, `HTTPClient`, `URLSessionHTTPClient` |
+| **iOS Presentation** | `QuizEngineCore/QuizEngineiOS` | Observable chat state, message models, error handling for UI layers. | `ChatViewModel`, `ChatMessage`, `ErrorMessage` |
+| **CLI Presentation** | `QuizEngineCore/QuizEngineCLI` | Terminal I/O abstraction, command parsing, ANSI styling. | `QuizEngineCLIApp`, `ChatIO`, `StandardIO`, `Command`, `TerminalOutputStyling` |
+
+---
+
+## Protocol Catalog
+
+| Protocol | Defined In | Purpose | Primary Conformers |
+| --- | --- | --- | --- |
+| `AnswerProvider` | `QuizEngineCore/Domain/Models/AnswerProvider.swift` | Async contract for producing `CountryAnswer` from free-form questions. | `AnswerEngine`, UITest stub (`UITestAnswerEngine`), CLI tests (`AnswerEngineSpy`) |
+| `CountryQuestionInterpreting` | `QuizEngineCore/Domain/Models/CountryQuestionInterpreting.swift` | Converts raw text to structured `CountryQuery` intents. | `CountryQuestionInterpreter` |
+| `CountryLoader` | `QuizEngineCore/API/Models/CountryLoader.swift` | Loads cached or remote country lists for the engine. | `RemoteCountryLoader`, spy loaders in tests |
+| `HTTPClient` | `QuizEngineCore/API/Models/HTTPClient.swift` | Minimal async GET interface for networking. | `URLSessionHTTPClient`, HTTP stubs in tests |
+| `ChatIO` | `QuizEngineCore/QuizEngineCLI/Models/ChatIO.swift` | Abstracts terminal input/output for the CLI. | `StandardIO`, test doubles in `QuizEngineCLITests` |
+
+These protocols are the seams that allow the CLI and iOS apps to share the same engine while keeping tests fast and deterministic (e.g., custom UITest stubs and spies).
+
+---
+
+## Core Components & Flow
+
+1. **User Input** enters via either the CLI prompt or the SwiftUI chat text field.
+2. **ChatViewModel / QuizEngineCLIApp** forward the raw question to an `AnswerProvider`.
+3. **AnswerEngine** interprets the question (`CountryQuestionInterpreter`), loads country data through `CountryLoader`, caches results, and returns a formatted `CountryAnswer`.
+4. **Presentation Layers** render responses (chat bubbles, ANSI console colours) and expose retry/error funcionality.
+5. **Networking** is handled with `URLSessionHTTPClient`, which powers `RemoteCountryLoader` to call `https://restcountries.com/v3.1/all?fields=…`.
+
+Error cases (connectivity or parsing failures) surface as `.dataUnavailable`, triggering UI alerts in iOS and warning banners in the CLI. A retry button/command replays the last successful question when `ChatViewModel.canRetry` is `true`.
+
+---
+
+## Application Targets
+
+### QuiziOSApp (iOS)
+
+- **Technology**: SwiftUI + NavigationStack.
+- **Composition**: `CompositionRoot` wires `AnswerEngine` with `RemoteCountryLoader`.
+- **UI**: `ContentView` renders a scrollable chat transcript (`ChatMessageBubble`), input field, retry toolbar button, and progress state. Errors present as alerts with retry/cancel actions.
+- **Deterministic UITests**: `UITestSupport` swaps the engine during UITest launches. The UITest suite (`QuiziOSAppUITests.swift`) covers:
+  - Capital, flag, ISO code, and prefix questions.
+  - Retry behaviour after a simulated failure.
+  - Error alert presentation.
+  Launch arguments: `UITesting`; environment payload: `UITEST_RESPONSES` (JSON array of stubbed answers).
+
+### QuizCLIApp (macOS Command Line)
+
+- **Entry Point**: `QuizCLIApp/main.swift` boots `QuizEngineCLIApp` with `StandardIO` and the shared engine.
+- **Features**:
+  - Greeting banner with coloured ANSI styling.
+  - Command parsing (`exit`, `quit`, `retry`).
+  - Graceful handling of EOF and network failures.
+  - Image URLs are printed as supplemental info when available.
+- **Running**:
+  - From Xcode: select `QuizCLIApp` scheme and press **Run** (console displays in the debugger).
+  - From terminal: `xcodebuild -workspace QuizEngine.xcworkspace -scheme QuizCLIApp -destination 'platform=macOS' build` then execute the binary in `DerivedData` (or configure a package manifest to use `swift run`).
+
+---
+
+## Testing Strategy
+
+- **Unit Tests** (`QuizEngineCoreTests`, `QuizEngineiOSTests`, `QuizEngineCLITests`) validate interpreters, loaders, view models, and CLI loop. Spies/mocks implement the protocols above to assert behaviour.
+- **iOS UITests** (`QuiziOSAppUITests`) drive the chat UI end-to-end using stubbed responses and accessibility identifiers (`question-input`, `retry-button`).
+- **Test Plans**:
+  - `CI.xctestplan`: Aggregates every test bundle. Configure destinations inside the plan (macOS + iOS Simulator) to ensure iOS tests find `QuizEngineiOS.framework`.
+  - Schemes such as `CI` reference this plan to run all suites with one command (`⌘U` or `xcodebuild … -scheme CI -testPlan CI test`).
