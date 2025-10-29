@@ -1,6 +1,6 @@
 import Foundation
 
-public final class RemoteCountryLoader {
+public final class RemoteCountryLoader: CountryLoader {
     
     public enum Error: Swift.Error, Equatable {
         case connectivity
@@ -17,7 +17,7 @@ public final class RemoteCountryLoader {
         self.decoder = decoder
     }
 
-    public func load() async throws -> [Country] {
+    public func loadCountries() async throws -> [Country] {
         let payload: (data: Data, response: HTTPURLResponse)
 
         do {

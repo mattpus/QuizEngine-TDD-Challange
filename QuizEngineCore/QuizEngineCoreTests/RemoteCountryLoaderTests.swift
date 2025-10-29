@@ -7,7 +7,7 @@ final class RemoteCountryLoaderTests: XCTestCase {
         let (sut, client) = makeSUT(url: url)
 
         client.stub(result: .success((Data("[]".utf8), anyHTTPResponse(statusCode: 200))))
-        _ = try await sut.load()
+        _ = try await sut.loadCountries()
 
         XCTAssertEqual(client.requestedURLs, [url])
     }
@@ -18,7 +18,7 @@ final class RemoteCountryLoaderTests: XCTestCase {
         client.stub(result: .failure(error))
 
         do {
-            _ = try await sut.load()
+            _ = try await sut.loadCountries()
             XCTFail("Expected error")
         } catch {
             guard case RemoteCountryLoader.Error.connectivity = error else {
@@ -35,7 +35,7 @@ final class RemoteCountryLoaderTests: XCTestCase {
             client.stub(result: .success((anyData(), anyHTTPResponse(statusCode: statusCode))))
 
             do {
-                _ = try await sut.load()
+                _ = try await sut.loadCountries()
                 XCTFail("Expected invalidData error for status code \(statusCode)")
             } catch {
                 guard case RemoteCountryLoader.Error.invalidData = error else {
@@ -50,7 +50,7 @@ final class RemoteCountryLoaderTests: XCTestCase {
         client.stub(result: .success((Data("invalid".utf8), anyHTTPResponse(statusCode: 200))))
 
         do {
-            _ = try await sut.load()
+            _ = try await sut.loadCountries()
             XCTFail("Expected invalidData error")
         } catch {
             guard case RemoteCountryLoader.Error.invalidData = error else {
@@ -67,7 +67,7 @@ final class RemoteCountryLoaderTests: XCTestCase {
         ]
         client.stub(result: .success((makeCountriesData(from: countries), anyHTTPResponse(statusCode: 200))))
 
-        let received = try await sut.load()
+        let received = try await sut.loadCountries()
 
         XCTAssertEqual(received, countries)
     }
@@ -79,7 +79,7 @@ final class RemoteCountryLoaderTests: XCTestCase {
         ]
         client.stub(result: .success((makeCountriesData(from: countries), anyHTTPResponse(statusCode: 200))))
 
-        let received = try await sut.load()
+        let received = try await sut.loadCountries()
 
         XCTAssertEqual(received, countries)
     }

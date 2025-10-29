@@ -9,7 +9,7 @@ import Foundation
 import QuizEngineCore
 import Combine
 
-final class ChatViewModel: ObservableObject {
+public final class ChatViewModel: ObservableObject {
     @Published public private(set) var messages: [ChatMessage] = []
     @Published public private(set) var isLoading = false
     @Published public private(set) var error: ErrorMessage?
