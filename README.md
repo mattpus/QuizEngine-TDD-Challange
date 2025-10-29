@@ -34,7 +34,10 @@ Create a multi-platform app that can answer basic questions about a country.
 
 QuizEngine is a multi-target workspace built through TDD to answer country-related questions from multiple front-ends (iOS chat UI and terminal CLI) while sharing a single core domain. It consumes [restcountries.com](https://restcountries.com) data, supports resilient networking, and keeps presentation layers decoupled via protocols.
 
----
+
+
+---<img width="1048" height="925" alt="Screenshot 2025-10-29 at 19 01 49" src="https://github.com/user-attachments/assets/f13762a6-96f3-48af-b295-0bf855db0c56" />
+
 
 ## Workspace Structure
 
