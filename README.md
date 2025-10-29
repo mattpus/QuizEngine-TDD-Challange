@@ -121,7 +121,7 @@ Error cases (connectivity or parsing failures) surface as `.dataUnavailable`, tr
   - Image URLs are printed as supplemental info when available.
 - **Running**:
   - From Xcode: select `QuizCLIApp` scheme and press **Run** (console displays in the debugger).
-  - From terminal: `xcodebuild -workspace QuizEngine.xcworkspace -scheme QuizCLIApp -destination 'platform=macOS' build` then execute the binary in `DerivedData` (or configure a package manifest to use `swift run`).
+  - From terminal: run `./run-cli.sh` to build into `./build` and launch with the proper framework search path (script logs detailed output to `/tmp/quizcli-build.log`).
 
 ---
 
