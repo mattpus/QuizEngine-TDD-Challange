@@ -39,6 +39,10 @@ public final class ChatViewModel: ObservableObject {
         await answer(lastQuestion, appendUserMessage: false)
     }
     
+    public func dismissError() {
+        error = nil
+    }
+    
     private func answer(_ question: String, appendUserMessage: Bool) async {
         if appendUserMessage {
             messages.append(ChatMessage(role: .user, text: question))

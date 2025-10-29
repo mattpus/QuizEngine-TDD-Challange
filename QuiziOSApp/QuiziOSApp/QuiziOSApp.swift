@@ -1,5 +1,5 @@
 //
-//  QuiziOSAppApp.swift
+//  QuiziOSApp.swift
 //  QuiziOSApp
 //
 //  Created by Matt on 29/10/2025.
@@ -8,12 +8,18 @@
 import SwiftUI
 
 @main
-struct QuiziOSAppApp: App {
+struct QuiziOSApp: App {
     @State private var compositionRoot = CompositionRoot()
     
     var body: some Scene {
         WindowGroup {
+#if DEBUG
+            if let viewModel = UITestSupport.makeViewModelIfNeeded() {
+                ContentView(viewModel: viewModel)
+            }
+#else
             ContentView(viewModel: compositionRoot.makeChatViewModel())
+#endif
         }
     }
 }
