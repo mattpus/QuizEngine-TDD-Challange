@@ -58,6 +58,23 @@
 		C9413C8B2EB13251002F03B9 /* QuizEngineiOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = QuizEngineiOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		C991E4822EB2209500B7082B /* Exceptions for "QuizEngineiOSTests" folder in "QuizEngineCoreTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				QuizEngineiOS.xctestplan,
+			);
+			target = C9413BEA2EB10393002F03B9 /* QuizEngineCoreTests */;
+		};
+		C991E4832EB2209500B7082B /* Exceptions for "QuizEngineiOSTests" folder in "QuizEngineiOSTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				QuizEngineiOS.xctestplan,
+			);
+			target = C9413C8A2EB13251002F03B9 /* QuizEngineiOSTests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		C9413BE22EB10393002F03B9 /* QuizEngineCore */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
@@ -76,6 +93,10 @@
 		};
 		C9413C8F2EB13251002F03B9 /* QuizEngineiOSTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				C991E4822EB2209500B7082B /* Exceptions for "QuizEngineiOSTests" folder in "QuizEngineCoreTests" target */,
+				C991E4832EB2209500B7082B /* Exceptions for "QuizEngineiOSTests" folder in "QuizEngineiOSTests" target */,
+			);
 			path = QuizEngineiOSTests;
 			sourceTree = "<group>";
 		};
