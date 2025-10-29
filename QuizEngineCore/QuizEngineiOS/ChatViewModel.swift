@@ -9,6 +9,7 @@ import Foundation
 import QuizEngineCore
 import Combine
 
+@MainActor
 public final class ChatViewModel: ObservableObject {
     @Published public private(set) var messages: [ChatMessage] = []
     @Published public private(set) var isLoading = false

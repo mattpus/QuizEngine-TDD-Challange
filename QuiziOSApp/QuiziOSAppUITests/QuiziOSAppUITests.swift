@@ -7,6 +7,7 @@
 
 import XCTest
 
+@MainActor
 final class QuiziOSAppUITests: XCTestCase {
 
     override func setUpWithError() throws {
@@ -91,6 +92,7 @@ final class QuiziOSAppUITests: XCTestCase {
 
 // MARK: - Helpers
 
+@MainActor
 private extension QuiziOSAppUITests {
     func launchApp(responses: [StubResponse]) -> XCUIApplication {
         let app = XCUIApplication()

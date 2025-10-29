@@ -1,6 +1,7 @@
 import XCTest
 @testable import QuizEngineCore
 
+@MainActor
 final class CountryQuestionInterpreterTests: XCTestCase {
     func test_interpretsCapitalQuestion() {
         let sut = makeSUT()

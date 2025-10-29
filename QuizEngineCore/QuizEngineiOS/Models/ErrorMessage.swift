@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct ErrorMessage: Identifiable, Equatable {
+public struct ErrorMessage: Identifiable, Equatable, Sendable {
     public let id = UUID()
     public let message: String
 

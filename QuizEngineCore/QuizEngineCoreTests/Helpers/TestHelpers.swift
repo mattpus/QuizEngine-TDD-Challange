@@ -1,8 +1,10 @@
 import Foundation
 import XCTest
 @testable import QuizEngineCore
+import Synchronization
 
 extension XCTestCase {
+    @MainActor
     func trackForMemoryLeaks(_ instance: AnyObject, file: StaticString = #file, line: UInt = #line) {
         addTeardownBlock { [weak instance] in
             XCTAssertNil(instance, "Instance should have been deallocated. Potential memory leak.", file: file, line: line)
@@ -58,13 +60,13 @@ final class HTTPClientSpy: HTTPClient {
 }
 
 final class URLProtocolStub: URLProtocol {
-    private struct Stub {
+    private struct CustomStub {
         let data: Data?
         let response: URLResponse?
         let error: Error?
     }
 
-    nonisolated(unsafe) private static var stub: Stub?
+    private static let stub = Mutex<CustomStub?>(nil)
     nonisolated(unsafe) private static var requestObserver: ((URLRequest) -> Void)?
 
     static func startInterceptingRequests() {
@@ -73,7 +75,9 @@ final class URLProtocolStub: URLProtocol {
 
     static func stopInterceptingRequests() {
         URLProtocol.unregisterClass(URLProtocolStub.self)
-        stub = nil
+        stub.withLock({ stub in
+            stub = nil
+        })
         requestObserver = nil
     }
 
@@ -82,7 +86,9 @@ final class URLProtocolStub: URLProtocol {
     }
 
     static func stub(data: Data?, response: URLResponse?, error: Error?) {
-        stub = Stub(data: data, response: response, error: error)
+        stub.withLock({ stub in
+            stub = CustomStub(data: data, response: response, error: error)
+        })
     }
 
     override class func canInit(with request: URLRequest) -> Bool {
@@ -98,15 +104,20 @@ final class URLProtocolStub: URLProtocol {
             requestObserver(request)
         }
 
-        if let data = URLProtocolStub.stub?.data {
+        // Capture a snapshot of the current stub in a thread-safe manner
+        let currentStub: CustomStub? = URLProtocolStub.stub.withLock { stub in
+            return stub
+        }
+
+        if let data = currentStub?.data {
             client?.urlProtocol(self, didLoad: data)
         }
 
-        if let response = URLProtocolStub.stub?.response {
+        if let response = currentStub?.response {
             client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
         }
 
-        if let error = URLProtocolStub.stub?.error {
+        if let error = currentStub?.error {
             client?.urlProtocol(self, didFailWithError: error)
         } else {
             client?.urlProtocolDidFinishLoading(self)

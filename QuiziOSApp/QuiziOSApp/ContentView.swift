@@ -38,7 +38,7 @@ struct ContentView: View {
                 Divider()
                 VStack(spacing: 8) {
                     HStack(alignment: .bottom, spacing: 8) {
-                        TextField("Ask about a country capitol, flag, or iso...", text: $messageText, axis: .vertical)
+                        TextField("Ask about a country capital, flag, or iso...", text: $messageText, axis: .vertical)
                             .textFieldStyle(.roundedBorder)
                             .lineLimit(1...4)
                             .disabled(viewModel.isLoading)

@@ -9,6 +9,7 @@ import XCTest
 import QuizEngineCore
 @testable import QuizEngineiOS
 
+@MainActor
 final class ChatViewModelTests: XCTestCase {
     func test_chatViewModel_send_appendsUserAndAssistantMessagesOnSuccess() async {
         let engine = AnswerEngineSpy(result: .success(CountryAnswer(text: "The capital of Belgium is Brussels.", imageURL: nil)))

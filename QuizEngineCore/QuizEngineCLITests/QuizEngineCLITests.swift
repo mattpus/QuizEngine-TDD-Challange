@@ -9,6 +9,7 @@ import XCTest
 import QuizEngineCore
 @testable import QuizEngineCLI
 
+@MainActor
 final class QuizEngineCLITests: XCTestCase {
     func test_chatAnswersQuestionAndExits() async throws {
         let io = TestIO(inputs: ["What is the capital of Belgium?", "exit"])

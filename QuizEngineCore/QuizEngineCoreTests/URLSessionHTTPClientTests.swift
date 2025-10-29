@@ -1,6 +1,7 @@
 import XCTest
 @testable import QuizEngineCore
 
+@MainActor
 final class URLSessionHTTPClientTests: XCTestCase {
     override func setUp() {
         super.setUp()

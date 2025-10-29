@@ -1,6 +1,7 @@
 import XCTest
 @testable import QuizEngineCore
 
+@MainActor
 final class RemoteCountryLoaderTests: XCTestCase {
     func test_load_requestsDataFromURL() async throws {
         let url = anyURL()

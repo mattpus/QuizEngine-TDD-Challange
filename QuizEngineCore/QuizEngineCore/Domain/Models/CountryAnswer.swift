@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct CountryAnswer: Equatable {
+public struct CountryAnswer: Equatable, Sendable {
     public let text: String
     public let imageURL: URL?
 

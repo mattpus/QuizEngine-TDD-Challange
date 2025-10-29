@@ -1,6 +1,7 @@
 import XCTest
 @testable import QuizEngineCore
 
+@MainActor
 final class AnswerEngineTests: XCTestCase {
     func test_answerProvidesCapitalForKnownCountry() async throws {
         let countries = [makeCountry(name: "Belgium", capitals: ["Brussels"], iso: "BE", flagEmoji: "🇧🇪")]
