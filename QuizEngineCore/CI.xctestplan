@@ -1,0 +1,41 @@
+{
+  "configurations" : [
+    {
+      "id" : "5E006F9C-0675-4275-8B93-C7173CCE0BD4",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:QuizEngineCore\/QuizEngineCore.xcodeproj",
+        "identifier" : "C9D590BA2EB255C30043083F",
+        "name" : "QuizEngineCLITests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:QuizEngineCore\/QuizEngineCore.xcodeproj",
+        "identifier" : "C9413BEA2EB10393002F03B9",
+        "name" : "QuizEngineCoreTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:QuizEngineCore\/QuizEngineCore.xcodeproj",
+        "identifier" : "C9413C8A2EB13251002F03B9",
+        "name" : "QuizEngineiOSTests"
+      }
+    }
+  ],
+  "version" : 1
+}

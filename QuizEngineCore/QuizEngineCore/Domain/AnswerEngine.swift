@@ -8,10 +8,6 @@
 import Foundation
 
 public final class AnswerEngine: AnswerProvider {
-    public enum Error: Swift.Error, Equatable {
-        case dataUnavailable
-    }
-    
     private let loader: CountryLoader
     private let interpreter: CountryQuestionInterpreting
     private var cachedCountries: [Country]?
@@ -20,6 +16,10 @@ public final class AnswerEngine: AnswerProvider {
                 interpreter: CountryQuestionInterpreting = CountryQuestionInterpreter()) {
         self.loader = loader
         self.interpreter = interpreter
+    }
+    
+    public enum Error: Swift.Error, Equatable {
+        case dataUnavailable
     }
     
     public func answer(for question: String) async throws -> CountryAnswer {

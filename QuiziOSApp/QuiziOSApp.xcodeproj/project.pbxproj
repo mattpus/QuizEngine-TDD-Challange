@@ -12,13 +12,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		C9413E302EB218C1002F03B9 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C9413E1A2EB218C0002F03B9 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = C9413E212EB218C0002F03B9;
-			remoteInfo = QuiziOSApp;
-		};
 		C9413E3A2EB218C1002F03B9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C9413E1A2EB218C0002F03B9 /* Project object */;
@@ -44,7 +37,6 @@
 
 /* Begin PBXFileReference section */
 		C9413E222EB218C0002F03B9 /* QuiziOSApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QuiziOSApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		C9413E2F2EB218C1002F03B9 /* QuiziOSAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = QuiziOSAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9413E392EB218C1002F03B9 /* QuiziOSAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = QuiziOSAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9413E592EB218ED002F03B9 /* QuizEngineCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = QuizEngineCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9413E5D2EB218F1002F03B9 /* QuizEngineiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = QuizEngineiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -54,11 +46,6 @@
 		C9413E242EB218C0002F03B9 /* QuiziOSApp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = QuiziOSApp;
-			sourceTree = "<group>";
-		};
-		C9413E322EB218C1002F03B9 /* QuiziOSAppTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = QuiziOSAppTests;
 			sourceTree = "<group>";
 		};
 		C9413E3C2EB218C1002F03B9 /* QuiziOSAppUITests */ = {
@@ -77,13 +64,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C9413E2C2EB218C1002F03B9 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		C9413E362EB218C1002F03B9 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -98,7 +78,6 @@
 			isa = PBXGroup;
 			children = (
 				C9413E242EB218C0002F03B9 /* QuiziOSApp */,
-				C9413E322EB218C1002F03B9 /* QuiziOSAppTests */,
 				C9413E3C2EB218C1002F03B9 /* QuiziOSAppUITests */,
 				C9413E582EB218ED002F03B9 /* Frameworks */,
 				C9413E232EB218C0002F03B9 /* Products */,
@@ -109,7 +88,6 @@
 			isa = PBXGroup;
 			children = (
 				C9413E222EB218C0002F03B9 /* QuiziOSApp.app */,
-				C9413E2F2EB218C1002F03B9 /* QuiziOSAppTests.xctest */,
 				C9413E392EB218C1002F03B9 /* QuiziOSAppUITests.xctest */,
 			);
 			name = Products;
@@ -150,29 +128,6 @@
 			productReference = C9413E222EB218C0002F03B9 /* QuiziOSApp.app */;
 			productType = "com.apple.product-type.application";
 		};
-		C9413E2E2EB218C1002F03B9 /* QuiziOSAppTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = C9413E462EB218C1002F03B9 /* Build configuration list for PBXNativeTarget "QuiziOSAppTests" */;
-			buildPhases = (
-				C9413E2B2EB218C1002F03B9 /* Sources */,
-				C9413E2C2EB218C1002F03B9 /* Frameworks */,
-				C9413E2D2EB218C1002F03B9 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				C9413E312EB218C1002F03B9 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				C9413E322EB218C1002F03B9 /* QuiziOSAppTests */,
-			);
-			name = QuiziOSAppTests;
-			packageProductDependencies = (
-			);
-			productName = QuiziOSAppTests;
-			productReference = C9413E2F2EB218C1002F03B9 /* QuiziOSAppTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 		C9413E382EB218C1002F03B9 /* QuiziOSAppUITests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = C9413E492EB218C1002F03B9 /* Build configuration list for PBXNativeTarget "QuiziOSAppUITests" */;
@@ -209,10 +164,6 @@
 					C9413E212EB218C0002F03B9 = {
 						CreatedOnToolsVersion = 26.0.1;
 					};
-					C9413E2E2EB218C1002F03B9 = {
-						CreatedOnToolsVersion = 26.0.1;
-						TestTargetID = C9413E212EB218C0002F03B9;
-					};
 					C9413E382EB218C1002F03B9 = {
 						CreatedOnToolsVersion = 26.0.1;
 						TestTargetID = C9413E212EB218C0002F03B9;
@@ -234,7 +185,6 @@
 			projectRoot = "";
 			targets = (
 				C9413E212EB218C0002F03B9 /* QuiziOSApp */,
-				C9413E2E2EB218C1002F03B9 /* QuiziOSAppTests */,
 				C9413E382EB218C1002F03B9 /* QuiziOSAppUITests */,
 			);
 		};
@@ -242,13 +192,6 @@
 
 /* Begin PBXResourcesBuildPhase section */
 		C9413E202EB218C0002F03B9 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C9413E2D2EB218C1002F03B9 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -272,13 +215,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C9413E2B2EB218C1002F03B9 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		C9413E352EB218C1002F03B9 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -289,11 +225,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		C9413E312EB218C1002F03B9 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = C9413E212EB218C0002F03B9 /* QuiziOSApp */;
-			targetProxy = C9413E302EB218C1002F03B9 /* PBXContainerItemProxy */;
-		};
 		C9413E3B2EB218C1002F03B9 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = C9413E212EB218C0002F03B9 /* QuiziOSApp */;
@@ -483,48 +414,6 @@
 			};
 			name = Release;
 		};
-		C9413E472EB218C1002F03B9 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = mattpus.com.QuiziOSAppTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/QuiziOSApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/QuiziOSApp";
-			};
-			name = Debug;
-		};
-		C9413E482EB218C1002F03B9 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = mattpus.com.QuiziOSAppTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/QuiziOSApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/QuiziOSApp";
-			};
-			name = Release;
-		};
 		C9413E4A2EB218C1002F03B9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -580,15 +469,6 @@
 			buildConfigurations = (
 				C9413E442EB218C1002F03B9 /* Debug */,
 				C9413E452EB218C1002F03B9 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		C9413E462EB218C1002F03B9 /* Build configuration list for PBXNativeTarget "QuiziOSAppTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				C9413E472EB218C1002F03B9 /* Debug */,
-				C9413E482EB218C1002F03B9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

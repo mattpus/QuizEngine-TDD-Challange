@@ -6,6 +6,22 @@
       parallelizeBuildables = "YES"
       buildImplicitDependencies = "YES"
       buildArchitectures = "Automatic">
+      <BuildActionEntries>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "C9413C822EB13251002F03B9"
+               BuildableName = "QuizEngineiOS.framework"
+               BlueprintName = "QuizEngineiOS"
+               ReferencedContainer = "container:QuizEngineCore/QuizEngineCore.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+      </BuildActionEntries>
    </BuildAction>
    <TestAction
       buildConfiguration = "Debug"
@@ -14,7 +30,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:../../QuizEngineCoreTests.xctestplan"
+            reference = "container:../QuizEngineiOS.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
@@ -24,10 +40,10 @@
             parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "C9413BEA2EB10393002F03B9"
-               BuildableName = "QuizEngineCoreTests.xctest"
-               BlueprintName = "QuizEngineCoreTests"
-               ReferencedContainer = "container:QuizEngineCore.xcodeproj">
+               BlueprintIdentifier = "C9413C8A2EB13251002F03B9"
+               BuildableName = "QuizEngineiOSTests.xctest"
+               BlueprintName = "QuizEngineiOSTests"
+               ReferencedContainer = "container:QuizEngineCore/QuizEngineCore.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -49,6 +65,15 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "C9413C822EB13251002F03B9"
+            BuildableName = "QuizEngineiOS.framework"
+            BlueprintName = "QuizEngineiOS"
+            ReferencedContainer = "container:QuizEngineCore/QuizEngineCore.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

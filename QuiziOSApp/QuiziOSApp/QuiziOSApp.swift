@@ -16,6 +16,8 @@ struct QuiziOSApp: App {
 #if DEBUG
             if let viewModel = UITestSupport.makeViewModelIfNeeded() {
                 ContentView(viewModel: viewModel)
+            } else {
+                ContentView(viewModel: compositionRoot.makeChatViewModel())
             }
 #else
             ContentView(viewModel: compositionRoot.makeChatViewModel())

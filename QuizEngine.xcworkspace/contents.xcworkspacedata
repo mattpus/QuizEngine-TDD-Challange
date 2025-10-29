@@ -2,9 +2,15 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:QuizEngineCore/CI.xctestplan">
+   </FileRef>
+   <FileRef
       location = "container:QuizEngineCore/QuizEngineCore.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:QuiziOSApp/QuiziOSApp.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:QuizCLIApp/QuizCLIApp.xcodeproj">
    </FileRef>
 </Workspace>

@@ -1,7 +1,7 @@
 {
   "configurations" : [
     {
-      "id" : "B3584DC6-29A3-4B7F-BA1D-0F7473C06B99",
+      "id" : "1E1F70C8-59E4-4681-AE95-B12FC80C37A7",
       "name" : "Test Scheme Action",
       "options" : {
 
@@ -13,13 +13,7 @@
     "testExecutionOrdering" : "random"
   },
   "testTargets" : [
-    {
-      "target" : {
-        "containerPath" : "container:QuizEngineCore\/QuizEngineCore.xcodeproj",
-        "identifier" : "C9413BEA2EB10393002F03B9",
-        "name" : "QuizEngineCoreTests"
-      }
-    }
+
   ],
   "version" : 1
 }
