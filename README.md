@@ -30,9 +30,7 @@ Create a multi-platform app that can answer basic questions about a country.
 
 ---
 
-## Solution 
-
-QuizEngine is a multi-target workspace built through TDD to answer country-related questions from multiple front-ends (iOS chat UI and terminal CLI) while sharing a single core domain. It consumes [restcountries.com](https://restcountries.com) data, supports resilient networking, and keeps presentation layers decoupled via protocols.
+## Solution Overview
 
 
 
@@ -57,7 +55,6 @@ The top-level `QuizEngine.xcworkspace` stitches together three Xcode projects so
   - `QuizEngineCoreTests`
   - `QuizEngineiOSTests`
   - `QuizEngineCLITests`
-  - `QuiziOSAppTests`
   - `QuiziOSAppUITests`
 
 The shared `CI.xctestplan` (and derived “AllUnitTests” scheme) can execute every test bundle in one click;
@@ -72,20 +69,6 @@ The shared `CI.xctestplan` (and derived “AllUnitTests” scheme) can execute e
 | **API** | `QuizEngineCore/QuizEngineCore/API` | Fetch and decode REST Countries data; abstract URL loading. | `RemoteCountryLoader`, `CountryLoader`, `HTTPClient`, `URLSessionHTTPClient` |
 | **iOS Presentation** | `QuizEngineCore/QuizEngineiOS` | Observable chat state, message models, error handling for UI layers. | `ChatViewModel`, `ChatMessage`, `ErrorMessage` |
 | **CLI Presentation** | `QuizEngineCore/QuizEngineCLI` | Terminal I/O abstraction, command parsing, ANSI styling. | `QuizEngineCLIApp`, `ChatIO`, `StandardIO`, `Command`, `TerminalOutputStyling` |
-
----
-
-## Protocol Catalog
-
-| Protocol | Defined In | Purpose | Primary Conformers |
-| --- | --- | --- | --- |
-| `AnswerProvider` | `QuizEngineCore/Domain/Models/AnswerProvider.swift` | Async contract for producing `CountryAnswer` from free-form questions. | `AnswerEngine`, UITest stub (`UITestAnswerEngine`), CLI tests (`AnswerEngineSpy`) |
-| `CountryQuestionInterpreting` | `QuizEngineCore/Domain/Models/CountryQuestionInterpreting.swift` | Converts raw text to structured `CountryQuery` intents. | `CountryQuestionInterpreter` |
-| `CountryLoader` | `QuizEngineCore/API/Models/CountryLoader.swift` | Loads cached or remote country lists for the engine. | `RemoteCountryLoader`, spy loaders in tests |
-| `HTTPClient` | `QuizEngineCore/API/Models/HTTPClient.swift` | Minimal async GET interface for networking. | `URLSessionHTTPClient`, HTTP stubs in tests |
-| `ChatIO` | `QuizEngineCore/QuizEngineCLI/Models/ChatIO.swift` | Abstracts terminal input/output for the CLI. | `StandardIO`, test doubles in `QuizEngineCLITests` |
-
-These protocols are the seams that allow the CLI and iOS apps to share the same engine while keeping tests fast and deterministic (e.g., custom UITest stubs and spies).
 
 ---
 
@@ -105,7 +88,6 @@ Error cases (connectivity or parsing failures) surface as `.dataUnavailable`, tr
 
 ### QuiziOSApp (iOS)
 
-- **Technology**: SwiftUI + NavigationStack.
 - **Composition**: `CompositionRoot` wires `AnswerEngine` with `RemoteCountryLoader`.
 - **UI**: `ContentView` renders a scrollable chat transcript (`ChatMessageBubble`), input field, retry toolbar button, and progress state. Errors present as alerts with retry/cancel actions.
 - **Deterministic UITests**: `UITestSupport` swaps the engine during UITest launches. The UITest suite (`QuiziOSAppUITests.swift`) covers:
