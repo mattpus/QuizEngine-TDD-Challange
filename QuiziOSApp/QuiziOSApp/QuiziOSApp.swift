@@ -9,7 +9,7 @@ import SwiftUI
 
 @main
 struct QuiziOSApp: App {
-    @State private var dependencies = Dependencies()
+    @StateObject private var dependencies = Dependencies()
     
     var body: some Scene {
         WindowGroup {
