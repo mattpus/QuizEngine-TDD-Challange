@@ -6,80 +6,61 @@
 //
 
 import Foundation
+import FoundationModels
 
 public final class CountryQuestionInterpreter: CountryQuestionInterpreting {
     
-    public init() {}
+    private let session: LanguageModelSession
     
-    /// tolerance of wrong characters, that user can make when typing
-    private let tolerance = 2
+    public init(session: LanguageModelSession? = nil) {
+        self.session = session ?? LanguageModelSession(instructions: Self.instructionText)
+    }
+    
+    private static let instructionText: String = """
+    You are a country question interpreter. Given a natural-language question, determine the most appropriate CountryQuery:
+    - capital: when the user asks for the capital of a country.
+    - isoCode: when the user asks for the country ISO/alpha-2 code.
+    - flag: when the user asks to see the flag of a country.
+    - countriesstartingwith: when the user asks for countries that start with a given prefix.
+    - unknown: when no pattern matches; include the original question.
 
-    public func interpret(_ question: String) -> CountryQuery {
-        let trimmed = question.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return .unknown(question) }
-        
-        let normalized = NormalizedQuestion(original: trimmed)
-        let strategies: [(NormalizedQuestion) -> CountryQuery?] = [
-            checkIfCapital,
-            checkIfISO,
-            checkIfFlag,
-            checkIfCountry
-        ]
+    Rules:
+    - Be robust to minor typos. If the user writes words close to key terms (e.g., "capitel" ≈ "capital"), treat them as matches when within edit distance <= 2.
+    - Extract the subject (country name or prefix) after phrases like "capital of", "code for", or prepositions like "of"/"for".
+    - For starting-with queries, return the uppercase prefix without surrounding whitespace.
+    - Avoid making up country names; if you cannot identify a subject, return .unknown.
+    """
+ 
+    public func interpret(_ question: String) async -> CountryQuery {
+        do {
+            let prompt = Prompt("Answer the return the most appropriate QuestionQuery for this question from the user: \(question)")
 
-        guard let matchedQuery = strategies.compactMap({ $0(normalized) }).first else {
-            return .unknown(trimmed)
+            let response = try await session.respond(to: prompt, generating: QuestionQuery.self)
+            return mapToCountryQuery(from: response.content)
+        } catch {
+            return .unknown("Error processing question: \(question)")
         }
-        return matchedQuery
     }
     
-    // MARK: - Strategies to match the question with the answer
-    
-    private func checkIfCapital(question: NormalizedQuestion) -> CountryQuery? {
-        if question.fuzzyContains("capital", tolerance: tolerance) {
-            if let subject = question.argument(after: ["capital of", "capital for", "capital city of", "capital city for"])
-                ?? question.argument(afterPrepositions: ["of", "for"]) {
-                return .capital(of: subject)
-            }
+    private func mapToCountryQuery(from question: QuestionQuery) -> CountryQuery {
+        switch question.type.lowercased() {
+        case "capital":
+            return .capital(of: question.country)
+        case "isocode", "iso", "alpha2", "alpha-2":
+            return .isoCode(of: question.country)
+        case "flag":
+            return .flag(of: question.country)
+        case "startswith", "countriesstartingwith":
+            return .countriesStartingWith(prefix: question.countryPrefix)
+        default:
+            return .unknown("Unrecognized type of question")
         }
-        return nil
     }
-    
-    private func checkIfISO(question: NormalizedQuestion) -> CountryQuery? {
-        if question.fuzzyContains("iso", tolerance: tolerance) || question.contains("alpha-2") || question.contains("alpha2") {
-            if question.fuzzyContains("code", tolerance: tolerance) {
-                if let subject = question.argument(after: ["code for", "code of", "for", "of"])
-                    ?? question.argument(afterPrepositions: ["for", "of"]) {
-                    return .isoCode(of: subject)
-                }
-            }
-        }
-        return nil
-    }
-    
-    private func checkIfFlag(question: NormalizedQuestion) -> CountryQuery? {
-        if question.fuzzyContains("flag", tolerance: tolerance) {
-            if let subject = question.argument(after: ["flag of", "flag for", "for", "of"])
-                ?? question.argument(afterPrepositions: ["for", "of"]) {
-                return .flag(of: subject)
-            }
-        }
-        return nil
-    }
-    
-    private func checkIfCountry(question: NormalizedQuestion) -> CountryQuery? {
-        if question.contains("countries") || question.contains("country") {
-            if question.fuzzyContains("start", tolerance: tolerance) || question.fuzzyContains("begin", tolerance: tolerance) {
-                if question.fuzzyContains("with", tolerance: tolerance) {
-                    if let prefix = question.argument(after: ["start with", "starting with", "begin with", "beginning with", "with"]) {
-                        let sanitized = prefix
-                            .components(separatedBy: CharacterSet.whitespacesAndNewlines)
-                            .first
-                            .map { String($0) } ?? prefix
-                        return .countriesStartingWith(prefix: sanitized.uppercased())
-                    }
-                }
-            }
-        }
-        return nil
-    }
+}
+
+@Generable
+private struct QuestionQuery {
+    let country: String
+    let type: String
+    let countryPrefix: String
 }

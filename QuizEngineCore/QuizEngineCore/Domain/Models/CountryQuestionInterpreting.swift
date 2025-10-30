@@ -6,6 +6,5 @@
 //
 
 public protocol CountryQuestionInterpreting {
-    /// Parses the raw text into a structured `CountryQuery`.
-    func interpret(_ question: String) -> CountryQuery
+    func interpret(_ question: String) async -> CountryQuery
 }

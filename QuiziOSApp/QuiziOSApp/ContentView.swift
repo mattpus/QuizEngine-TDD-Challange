@@ -105,13 +105,3 @@ struct ContentView: View {
     }
 }
 
-
-#Preview {
-    struct PreviewEngine: AnswerProvider {
-        func answer(for question: String) async throws -> CountryAnswer {
-            CountryAnswer(text: "Sample answer for \(question)", imageURL: nil)
-        }
-    }
-    let viewModel = ChatViewModel(engine: PreviewEngine())
-    return ContentView(viewModel: viewModel)
-}

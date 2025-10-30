@@ -9,7 +9,7 @@ import SwiftUI
 
 @main
 struct QuiziOSApp: App {
-    @State private var compositionRoot = CompositionRoot()
+    @State private var dependencies = Dependencies()
     
     var body: some Scene {
         WindowGroup {
@@ -17,10 +17,10 @@ struct QuiziOSApp: App {
             if let viewModel = UITestSupport.makeViewModelIfNeeded() {
                 ContentView(viewModel: viewModel)
             } else {
-                ContentView(viewModel: compositionRoot.makeChatViewModel())
+                ContentView(viewModel: dependencies.chatViewModel)
             }
 #else
-            ContentView(viewModel: compositionRoot.makeChatViewModel())
+            ContentView(viewModel: dependencies.chatViewModel)
 #endif
         }
     }

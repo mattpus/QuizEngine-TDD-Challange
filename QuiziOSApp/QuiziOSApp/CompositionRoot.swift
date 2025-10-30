@@ -10,19 +10,17 @@ import QuizEngineiOS
 import Combine
 import Foundation
 
-final class CompositionRoot: ObservableObject {
-    
+final class Dependencies: ObservableObject {
     private let client: HTTPClient
     private let endpoint: URL
+    private let loader : RemoteCountryLoader
+    
     init(client: HTTPClient = URLSessionHTTPClient(),
          endpoint: URL = URL(string: "https://restcountries.com/v3.1/all?fields=name,capital,cca2,flag,flags")!) {
         self.client = client
         self.endpoint = endpoint
+        self.loader = RemoteCountryLoader(url: endpoint, client: client)
     }
     
-    func makeChatViewModel() -> ChatViewModel {
-        let loader = RemoteCountryLoader(url: endpoint, client: client)
-        let engine = AnswerEngine(loader: loader)
-        return ChatViewModel(engine: engine)
-    }
+    lazy var chatViewModel = ChatViewModel(engine: AnswerEngine(loader: loader))
 }

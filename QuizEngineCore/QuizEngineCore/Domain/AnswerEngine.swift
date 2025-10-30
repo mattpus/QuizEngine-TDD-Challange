@@ -23,7 +23,7 @@ public final class AnswerEngine: AnswerProvider {
     }
     
     public func answer(for question: String) async throws -> CountryAnswer {
-        let query = interpreter.interpret(question)
+        let query = await interpreter.interpret(question)
 
         switch query {
         case let .capital(of: name):
